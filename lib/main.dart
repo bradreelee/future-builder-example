@@ -1,8 +1,15 @@
+import 'package:future_builder/sample_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => DidRecallApiProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -52,7 +59,25 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return Center(child: Text(snapshot.data!));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(snapshot.data!),
+                  const SizedBox(height: 30),
+                  Consumer<DidRecallApiProvider>(
+                    builder: (context, provider, child) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('didRecallApi:'),
+                        const SizedBox(width: 20),
+                        Text('${provider.didRecallApi}'),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
           }
           return const Center(
             child: Text("error while fetching todo"),
